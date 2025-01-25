@@ -18,7 +18,7 @@ class ArticleController extends Controller
             $selectedTag = Tag::where('slug', $request->tag)->firstOrFail();
         }
 
-        $articles = Article::with(['tags', 'views', 'likes'])
+        $articles = Article::with(['tags'])
             ->withTag($selectedTag)
             ->latest()
             ->paginate(10);
@@ -32,7 +32,7 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        $article->load(['tags', 'views', 'likes']);
+        $article->load(['tags']);
 
         return view('articles.show', compact('article'));
     }

@@ -16,7 +16,7 @@
         <span class="flex items-center gap-1">
             <like-counter
                 :article-id="{{ $article->id }}"
-                :initial-likes="{{ $article->likes->count ?? 0 }}"
+                :initial-likes="{{ $article->likes_count }}"
             />
         </span>
     </div>

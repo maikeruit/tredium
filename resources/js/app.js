@@ -1,5 +1,5 @@
 import './bootstrap';
-import { createApp } from 'vue/dist/vue.esm-bundler.js'
+import { createApp } from 'vue'
 import Comments from './components/Comments.vue'
 import LikeCounter from './components/LikeCounter.vue'
 

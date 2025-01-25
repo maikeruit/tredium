@@ -8,10 +8,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $articles = Article::with(['views', 'likes', 'tags'])
+        $articles = Article::with(['tags'])
             ->latest()
             ->paginate(6);
 
         return view('home', compact('articles'));
     }
-} 
+}
