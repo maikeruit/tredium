@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller
 {
@@ -19,6 +19,10 @@ class CommentController extends Controller
         sleep(5);
 
         $comment = $article->comments()->create($validated);
+
+        Cache::tags(['article_comments'])
+            ->forget("article.{$article->id}.comments");
+
         $comment->load('replies');
 
         return response()->json($comment);

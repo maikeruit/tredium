@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Jobs\IncrementArticleViews;
+use Illuminate\Support\Facades\Redis;
 
 class ArticleController extends Controller
 {
@@ -30,17 +32,17 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        $article->load(['tags', 'comments' => function ($query) {
-            $query->whereNull('parent_id')
-                  ->with('replies');
-        }, 'views', 'likes']);
+        $article->load(['tags', 'views', 'likes']);
 
         return view('articles.show', compact('article'));
     }
 
     public function incrementViews(Article $article)
     {
-        $article->views()->increment('count');
+        $key = "article:{$article->id}:likes";
+        Redis::incr($key);
+
+        IncrementArticleViews::dispatch($article);
 
         return response()->json(['success' => true]);
     }

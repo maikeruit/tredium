@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\IncrementArticleLike;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Redis;
 
 class ArticleLikeController extends Controller
 {
     public function store(Article $article): JsonResponse
     {
-        $article->likes()->increment('count');
-        
+        $key = "article:{$article->id}:likes";
+        $count = Redis::incr($key);
+
+        IncrementArticleLike::dispatch($article);
+
         return response()->json([
-            'count' => $article->likes->count
+            'count' => $count
         ]);
     }
-} 
+}
