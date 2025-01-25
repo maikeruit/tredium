@@ -4,20 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with(['tags', 'views', 'likes'])
-            ->latest()
-            ->paginate(10);
-
+        $selectedTag = null;
+        $articles = Article::with(['tags', 'views', 'likes']);
+        
+        if ($request->has('tag')) {
+            $selectedTag = Tag::where('slug', $request->tag)->firstOrFail();
+            $articles = $articles->whereHas('tags', function ($query) use ($selectedTag) {
+                $query->where('tags.id', $selectedTag->id);
+            });
+        }
+        
+        $articles = $articles->latest()->paginate(10);
+        
         $tags = Tag::withCount('articles')
             ->orderBy('articles_count', 'desc')
             ->get();
-
-        return view('articles.index', compact('articles', 'tags'));
+        
+        return view('articles.index', compact('articles', 'tags', 'selectedTag'));
     }
 
     public function show(Article $article)

@@ -25,9 +25,10 @@
     @if($article->tags->count())
     <div class="flex gap-2 mb-8">
         @foreach($article->tags as $tag)
-            <span class="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm">
+            <a href="{{ route('articles.index', ['tag' => $tag->slug]) }}" 
+               class="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm hover:bg-gray-300">
                 {{ $tag->name }}
-            </span>
+            </a>
         @endforeach
     </div>
     @endif

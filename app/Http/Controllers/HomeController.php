@@ -8,7 +8,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $articles = Article::with(['views', 'likes'])
+        $articles = Article::with(['views', 'likes', 'tags'])
             ->latest()
             ->paginate(6);
 
