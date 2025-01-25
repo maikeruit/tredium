@@ -37,4 +37,18 @@ class Article extends Model
     {
         return $this->hasOne(View::class);
     }
+
+    /**
+     * Scope для фильтрации статей по тегу
+     */
+    public function scopeWithTag($query, ?Tag $tag)
+    {
+        if ($tag) {
+            return $query->whereHas('tags', function ($query) use ($tag) {
+                $query->where('tags.id', $tag->id);
+            });
+        }
+        
+        return $query;
+    }
 } 

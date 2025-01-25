@@ -11,21 +11,20 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         $selectedTag = null;
-        $articles = Article::with(['tags', 'views', 'likes']);
-        
+
         if ($request->has('tag')) {
             $selectedTag = Tag::where('slug', $request->tag)->firstOrFail();
-            $articles = $articles->whereHas('tags', function ($query) use ($selectedTag) {
-                $query->where('tags.id', $selectedTag->id);
-            });
         }
-        
-        $articles = $articles->latest()->paginate(10);
-        
+
+        $articles = Article::with(['tags', 'views', 'likes'])
+            ->withTag($selectedTag)
+            ->latest()
+            ->paginate(10);
+
         $tags = Tag::withCount('articles')
             ->orderBy('articles_count', 'desc')
             ->get();
-        
+
         return view('articles.index', compact('articles', 'tags', 'selectedTag'));
     }
 
@@ -36,8 +35,13 @@ class ArticleController extends Controller
                   ->with('replies');
         }, 'views', 'likes']);
 
+        return view('articles.show', compact('article'));
+    }
+
+    public function incrementViews(Article $article)
+    {
         $article->views()->increment('count');
 
-        return view('articles.show', compact('article'));
+        return response()->json(['success' => true]);
     }
 }
