@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Comment extends Model
 {
@@ -17,6 +18,8 @@ class Comment extends Model
         'parent_id',
         'subject',
     ];
+
+    protected $appends = ['created_at_human'];
 
     public function article(): BelongsTo
     {
@@ -31,5 +34,12 @@ class Comment extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Comment::class, 'parent_id')->with('replies');
+    }
+
+    protected function createdAtHuman(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->created_at->diffForHumans()
+        );
     }
 }

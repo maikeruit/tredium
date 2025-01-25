@@ -25,7 +25,7 @@
     @if($article->tags->count())
     <div class="flex gap-2 mb-8">
         @foreach($article->tags as $tag)
-            <a href="{{ route('articles.index', ['tag' => $tag->slug]) }}" 
+            <a href="{{ route('articles.index', ['tag' => $tag->slug]) }}"
                class="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm hover:bg-gray-300">
                 {{ $tag->name }}
             </a>
@@ -47,16 +47,11 @@
 
     <!-- Форма отправки комментария -->
     <div class="mt-12">
-        <h2 class="text-2xl font-bold mb-6">Комментарии ({{ $article->comments->count() }})</h2>
-
-        <div class="mb-8">
-            <x-comment-form :article="$article" />
-        </div>
-
         <!-- Комментарии -->
-        @foreach($article->comments->whereNull('parent_id') as $comment)
-            <x-comment-item :comment="$comment" :article="$article" />
-        @endforeach
+        <comments
+            :article-id="{{ $article->id }}"
+            :initial-comments="{{ json_encode($article->comments->whereNull('parent_id')->values()) }}"
+        />
     </div>
 </article>
 

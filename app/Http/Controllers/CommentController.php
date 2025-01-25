@@ -16,8 +16,11 @@ class CommentController extends Controller
             'subject' => 'required|string|max:255'
         ]);
 
-        $article->comments()->create($validated);
+        sleep(5);
 
-        return redirect()->back()->with('success', 'Комментарий успешно добавлен');
+        $comment = $article->comments()->create($validated);
+        $comment->load('replies');
+
+        return response()->json($comment);
     }
 }
