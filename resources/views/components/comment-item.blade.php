@@ -2,6 +2,7 @@
 
 <div class="{{ $level > 0 ? 'ml-8' : '' }}">
     <div class="mb-2 bg-gray-50 p-4 rounded-lg">
+        <h4 class="font-medium text-gray-900 mb-2">{{ $comment->subject }}</h4>
         <p class="text-gray-800">{{ $comment->content }}</p>
         <div class="flex items-center justify-between mt-2">
             <span class="text-sm text-gray-600">{{ $comment->created_at->diffForHumans() }}</span>

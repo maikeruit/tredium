@@ -15,6 +15,7 @@ class Comment extends Model
         'article_id',
         'content',
         'parent_id',
+        'subject',
     ];
 
     public function article(): BelongsTo

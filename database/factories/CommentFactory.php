@@ -10,6 +10,7 @@ class CommentFactory extends Factory
     {
         return [
             'content' => fake()->paragraph(),
+            'subject' => fake()->sentence(),
         ];
     }
 }

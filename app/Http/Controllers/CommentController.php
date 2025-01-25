@@ -12,11 +12,12 @@ class CommentController extends Controller
     {
         $validated = $request->validate([
             'content' => 'required|string|max:1000',
-            'parent_id' => 'nullable|exists:comments,id'
+            'parent_id' => 'nullable|exists:comments,id',
+            'subject' => 'required|string|max:255'
         ]);
 
         $article->comments()->create($validated);
 
         return redirect()->back()->with('success', 'Комментарий успешно добавлен');
     }
-} 
+}
