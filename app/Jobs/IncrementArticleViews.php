@@ -15,7 +15,7 @@ class IncrementArticleViews implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        private readonly Article $article
+        private readonly int $id
     )
     {
         $this->onQueue('views');
@@ -23,13 +23,11 @@ class IncrementArticleViews implements ShouldQueue
 
     public function handle(): void
     {
-        $key = "article:{$this->article->id}:views";
+        $key = "article:{$this->id}:views";
 
-        Article::find($this->article->id)
+        Article::find($this->id)
             ->views()->update([
                 'count' => Redis::get($key)
             ]);
-
-        $this->article->views()->increment('count');
     }
 }

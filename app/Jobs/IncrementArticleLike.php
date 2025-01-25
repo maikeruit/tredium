@@ -15,7 +15,7 @@ class IncrementArticleLike implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        private readonly Article $article
+        private readonly int $id
     )
     {
         $this->onQueue('likes');
@@ -23,9 +23,9 @@ class IncrementArticleLike implements ShouldQueue
 
     public function handle(): void
     {
-        $key = "article:{$this->article->id}:likes";
+        $key = "article:{$this->id}:likes";
 
-        Article::find($this->article->id)
+        Article::find($this->id)
             ->likes()->update([
                 'count' => Redis::get($key)
             ]);

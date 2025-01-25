@@ -7,6 +7,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Jobs\IncrementArticleViews;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class ArticleController extends Controller
 {
@@ -18,31 +19,27 @@ class ArticleController extends Controller
             $selectedTag = Tag::where('slug', $request->tag)->firstOrFail();
         }
 
-        $articles = Article::with(['tags'])
-            ->withTag($selectedTag)
-            ->latest()
-            ->paginate(10);
-
-        $tags = Tag::withCount('articles')
-            ->orderBy('articles_count', 'desc')
-            ->get();
+        $articles = Article::getCachedByTag($selectedTag);
+        $tags = Tag::getCachedWithArticlesCount();
 
         return view('articles.index', compact('articles', 'tags', 'selectedTag'));
     }
 
-    public function show(Article $article)
+    public function show(int $id)
     {
-        $article->load(['tags']);
+        $article = Article::getCachedArticle($id);
 
         return view('articles.show', compact('article'));
     }
 
-    public function incrementViews(Article $article)
+    public function incrementViews(int $id)
     {
-        $key = "article:{$article->id}:likes";
+        $key = "article:{$id}:views";
         Redis::incr($key);
 
-        IncrementArticleViews::dispatch($article);
+        IncrementArticleViews::dispatch($id);
+
+        Cache::tags(['articles'])->forget("article.{$id}");
 
         return response()->json(['success' => true]);
     }

@@ -96,4 +96,45 @@ class Article extends Model
             fn() => $this->comments()->whereNull('parent_id')->with('replies')->get()
         );
     }
+
+    public static function getCachedLatest($perPage = 10)
+    {
+        $page = request()->get('page', 1);
+
+        return Cache::tags(['articles'])->remember(
+            "articles.latest.{$page}.{$perPage}",
+            3600,
+            fn() => static::with(['tags'])
+                ->latest()
+                ->paginate($perPage)
+        );
+    }
+
+    public static function getCachedByTag(?Tag $tag, $perPage = 10)
+    {
+        if (!$tag) {
+            return static::getCachedLatest($perPage);
+        }
+
+        $page = request()->get('page', 1);
+
+        return Cache::tags(['articles', "tag.{$tag->id}"])->remember(
+            "articles.tag.{$tag->id}.{$page}.{$perPage}",
+            3600,
+            fn() => static::with(['tags'])
+                ->withTag($tag)
+                ->latest()
+                ->paginate($perPage)
+        );
+    }
+
+    public static function getCachedArticle($id)
+    {
+        return Cache::tags(['articles'])->remember(
+            "article.{$id}",
+            3600,
+            fn() => static::with(['tags'])
+                ->findOrFail($id)
+        );
+    }
 }
