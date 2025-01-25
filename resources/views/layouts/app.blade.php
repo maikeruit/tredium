@@ -14,15 +14,15 @@
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex items-center">                
+                <div class="flex items-center">
                     <a href="/" class="text-2xl font-bold text-gray-800">Тредиум</a>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <a href="/" 
+                    <a href="/"
                        class="text-gray-600 hover:text-gray-900 pb-1 border-b-2 {{ request()->is('/') ? 'border-blue-500' : 'border-transparent' }}">
                         Главная
                     </a>
-                    <a href="{{ route('articles.index') }}" 
+                    <a href="{{ route('articles.index') }}"
                        class="text-gray-600 hover:text-gray-900 pb-1 border-b-2 {{ request()->routeIs('articles.index') ? 'border-blue-500' : 'border-transparent' }}">
                         Каталог статей
                     </a>
@@ -31,7 +31,27 @@
         </div>
     </nav>
 
-    <!-- Контент -->
+    <!-- Сообщение об успехе -->
+    @if (session('success'))
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700">
+                            {{ session('success') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Основной контент -->
     @yield('content')
 
     <!-- Футер -->

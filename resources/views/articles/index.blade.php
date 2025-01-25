@@ -3,6 +3,8 @@
 @section('content')
 <div class="container mx-auto px-4 py-8 mt-6">
     <div class="flex gap-2">
+
+        <!-- Правая колонка тегов -->
         <aside class="flex-initial w-1/3">
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-bold mb-4">Теги</h2>
@@ -17,6 +19,7 @@
             </div>
         </aside>
 
+        <!-- Список статей -->
         <main class="flex-initial w-auto ml-10">
             <h1 class="text-3xl font-bold mb-6">Статьи</h1>
 
@@ -57,6 +60,7 @@
                 @endforeach
             </div>
 
+            <!-- Пагинация -->
             @if ($articles->hasPages())
                 <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-center mt-8">
                     @if ($articles->onFirstPage())

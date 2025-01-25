@@ -4,6 +4,7 @@
 <article class="max-w-4xl mx-auto px-4 py-8">
     <h1 class="text-4xl font-bold mb-4">{{ $article->title }}</h1>
 
+    <!-- Счетчики -->
     <div class="flex items-center gap-4 text-gray-600 mb-6">
         <span class="flex items-center gap-1">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,6 +21,7 @@
         </span>
     </div>
 
+    <!-- Теги -->
     @if($article->tags->count())
     <div class="flex gap-2 mb-8">
         @foreach($article->tags as $tag)
@@ -30,36 +32,40 @@
     </div>
     @endif
 
+    <!-- Изображение -->
     @if($article->cover_image)
     <img src="{{ $article->cover_image }}"
          alt="{{ $article->title }}"
          class="w-full h-96 object-cover rounded-lg mb-8">
     @endif
 
+    <!-- Контент -->
     <div class="prose max-w-none">
         {!! nl2br(e($article->content)) !!}
     </div>
 
+    <!-- Форма отправки комментария -->
     <div class="mt-12">
         <h2 class="text-2xl font-bold mb-6">Комментарии ({{ $article->comments->count() }})</h2>
 
-        @foreach($article->comments->whereNull('parent_id') as $comment)
-            <div class="mb-6">
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <p class="text-gray-800">{{ $comment->content }}</p>
-                    <span class="text-sm text-gray-600">{{ $comment->created_at->diffForHumans() }}</span>
-                </div>
+        <div class="mb-8">
+            <x-comment-form :article="$article" />
+        </div>
 
-                @foreach($comment->replies as $reply)
-                    <div class="ml-8 mt-4">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <p class="text-gray-800">{{ $reply->content }}</p>
-                            <span class="text-sm text-gray-600">{{ $reply->created_at->diffForHumans() }}</span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+        <!-- Комментарии -->
+        @foreach($article->comments->whereNull('parent_id') as $comment)
+            <x-comment-item :comment="$comment" :article="$article" />
         @endforeach
     </div>
 </article>
+
+<script>
+function toggleReplyForm(formId) {
+    const form = document.getElementById(formId);
+    if (form) {
+        form.classList.toggle('hidden');
+    }
+}
+</script>
+
 @endsection
