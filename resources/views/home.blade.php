@@ -18,7 +18,7 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($articles as $article)
-                <a href="#" class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <a href="{{ route('articles.show', $article) }}" class="bg-white rounded-lg shadow-lg overflow-hidden">
                     @if($article->cover_image)
                         <img src="{{ $article->cover_image }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
                     @endif

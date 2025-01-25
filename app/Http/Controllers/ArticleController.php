@@ -19,4 +19,16 @@ class ArticleController extends Controller
 
         return view('articles.index', compact('articles', 'tags'));
     }
+
+    public function show(Article $article)
+    {
+        $article->load(['tags', 'comments' => function ($query) {
+            $query->whereNull('parent_id')
+                  ->with('replies');
+        }, 'views', 'likes']);
+
+        $article->views()->increment('count');
+
+        return view('articles.show', compact('article'));
+    }
 }

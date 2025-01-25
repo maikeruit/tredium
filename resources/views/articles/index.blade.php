@@ -22,7 +22,7 @@
 
             <div class="space-y-6">
                 @foreach($articles as $article)
-                    <article class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <a href="{{ route('articles.show', $article) }}" class="bg-white rounded-lg shadow-md overflow-hidden">
                         @if($article->cover_image)
                             <img src="{{ $article->cover_image }}"
                                  alt="{{ $article->title }}"
@@ -53,7 +53,7 @@
                                 </span>
                             </div>
                         </div>
-                    </article>
+                    </a>
                 @endforeach
             </div>
 

@@ -18,8 +18,14 @@
                     <a href="/" class="text-2xl font-bold text-gray-800">Тредиум</a>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <a href="/" class="text-gray-600 hover:text-gray-900">Главная</a>
-                    <a href="{{ route('articles.index') }}" class="text-gray-600 hover:text-gray-900">Каталог статей</a>
+                    <a href="/" 
+                       class="text-gray-600 hover:text-gray-900 pb-1 border-b-2 {{ request()->is('/') ? 'border-blue-500' : 'border-transparent' }}">
+                        Главная
+                    </a>
+                    <a href="{{ route('articles.index') }}" 
+                       class="text-gray-600 hover:text-gray-900 pb-1 border-b-2 {{ request()->routeIs('articles.index') ? 'border-blue-500' : 'border-transparent' }}">
+                        Каталог статей
+                    </a>
                 </div>
             </div>
         </div>
